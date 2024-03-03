@@ -43,7 +43,7 @@ void init_timer2() {
     // TODO
 }
 
-uint8_t has_timer0_ticked() {                   // I believe has_timer_ticked is much better than is_timer_pending
+int has_timer0_ticked() {                   // I believe has_timer_ticked is much better than is_timer_pending
     if (systick_count_temp > 0) {
         return 1;
     }

@@ -1,5 +1,5 @@
 #include "communication.h"
-#include "uart.h"
+#include "../driver/uart.h"
 
 #define RX_BUFFER_SIZE  64
 

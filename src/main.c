@@ -1,63 +1,78 @@
 // #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <avr/sleep.h>
-#include <avr/wdt.h>
-#include <util/delay.h>
+// #include <avr/interrupt.h>
+// #include <avr/pgmspace.h>
+// #include <avr/sleep.h>
+// #include <avr/wdt.h>
+// #include <util/delay.h>
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+// #include <stdbool.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
 
-#include "adc.h"
+#include "device.h"
+#include "events.h"
 #include "event_queue.h"
-#include "gpio.h"
 #include "scheduler.h"
-#include "state_machine.h"
-#include "timers.h"
-#include "uart.h"
+// #include "state_machine.h"
 
-void init_system();
+// enum power_mode_t {
+//     HIGH_POWER,
+//     LOW_POWER,
+//     POWER_DOWN
+// };
+
+// enum use_mode_t {
+//     USER,
+//     SERVICE
+// };
+
+// enum operate_mode_t {
+//     IDLE,
+//     ACTIVE,
+//     CHARGE
+// };
 
 int main() {
-    init_system();
+    init_device();
 
-    // uart0_puts("hello world\r\n");
-
-    enum state_t current_state = ACTIVE;
+    // enum power_mode_t current_power_mode = HIGH_POWER;
+    // enum use_mode_t current_use_mode = USER;
+    // enum operate_mode_t current_operate_mode = IDLE;
 
     for (;;) {
-        while (has_timer0_ticked() == 0) {
-            sleep_mode();
+        switch (0) {
+            case HIGH_POWER:
+                scheduler_high_power();
+                switch (0) {
+                    case USER:
+                        // switch (current_operate_mode) {
+                        //     case IDLE:
+                        //         break;
+                        //     case ACTIVE:
+                        //         break;
+                        //     case CHARGE:
+                        //         break;
+                        //     default:
+                        //         break;
+                        // }
+                        break;
+                    case SERVICE:
+                        break;
+                    default:
+                        break;
+                }
+                // current_power_mode = LOW_POWER;
+                break;
+            case LOW_POWER:
+                scheduler_low_power();
+                // current_power_mode = HIGH_POWER;
+                break;
+            case POWER_DOWN:
+                shceduler_power_down();
+                break;
+            default:
+                break;
         }
-
-        while (has_timer0_ticked() == 1) {
-            timer0_tick_count();
-            switch (current_state) {
-                case ACTIVE:
-                    PORTB |= (1 << PB5);
-                    current_state = IDLE;
-                    break;
-                case IDLE:
-                    PORTB &= ~(1 << PB5);
-                    current_state = ACTIVE;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        dispatch_event();                               // placeholder function
     }
-}
-
-void init_system() {
-    gpio_start();
-    uart0_init();
-    init_timer0();
-    init_timer1();
-
-    set_sleep_mode(SLEEP_MODE_IDLE);
-    sei();
 }

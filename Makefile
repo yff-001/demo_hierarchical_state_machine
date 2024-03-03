@@ -11,17 +11,8 @@ CFLAGS = \
 BAUDRATE = 115200
 PROGRAMMER = arduino
 MCU = atmega328p
-
-# Windows specific rules
-ifeq ($(OS), Windows_NT)
-# Windows specific rules
-PORT = COM3
-RM = del /Q
-else
-# Linux specific rules
 PORT = /dev/ttyUSB0
 RM = rm
-endif
 
 # Directories
 SRC_DIR = src
@@ -30,7 +21,7 @@ OBJ_DIR = obj
 BIN_DIR = bin
 
 # Source files
-SRC = $(wildcard $(SRC_DIR)/*.c)
+SRC = $(shell find $(SRC_DIR) -name *.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 # Executable
@@ -43,6 +34,7 @@ $(TARGET): $(OBJ) $(LIBOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(HEX): $(TARGET)
@@ -55,7 +47,7 @@ size: $(TARGET)
 	avr-size --mcu=$(MCU) --format=avr $(TARGET)
 
 clean:
-	$(RM) $(OBJ_DIR)/*.o
+	$(RM) -r $(OBJ_DIR)
 	$(RM) $(BIN_DIR)/*
 
 .PHONY: all clean upload size

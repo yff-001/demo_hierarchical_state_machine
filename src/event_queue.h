@@ -1,13 +1,10 @@
 #ifndef EVENT_QUEUE_H
 #define EVENT_QUEUE_H
 
-#include <stdint.h>
+#include "events.h"
 
-#define QUEUE_SIZE  16
-
-int dequeue();
-uint8_t enqueue(uint8_t value);
-uint8_t is_queue_empty();
-uint8_t is_queue_full();
+int event_queue_available();
+int event_queue_put(const enum event_t event);
+int event_queue_get(enum event_t* event);
 
 #endif
