@@ -11,6 +11,7 @@ struct timer_t {
     uint32_t duration;
     enum event_t event;
     bool is_suspended;
+    enum xtimer_t type;
 };
 
 struct timer_t timers[MAX_NUMBER_PERM + MAX_NUMBER_SYS];
@@ -23,11 +24,17 @@ void xtimer_init() {
         timers[index].duration = 0;
         timers[index].event = E_VOID;
         timers[index].is_suspended = false;
+        if (index < MAX_NUMBER_PERM) {
+            timers[index].type = XTIMER_PERM;
+        }
+        else {
+            timer[index].type = XTIMER_SYS;
+        }
     }
 }
 
 void xtimer_create(const enum xtimer_t timer_type, const enum event_t event, const uint32_t duration) {
-    
+
 }
 
 void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event) {
@@ -35,7 +42,22 @@ void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event) {
 }
 
 static bool create_timer(const enum xtimer_t timer_type, const enum event_t event, const uint32_t duration) {
-    uint8_t index;
-    /* iterate the array of timers based on timer_type */
-    // for (index)
+    /* overwrite existing timer if same type */
+    for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
+        if (timers[index].type == timer_type && timers[index].event == event) {
+            timers[index].duration = duration;
+            timers[index].is_suspended = false;
+            return true;
+        }
+    }
+    /* create new timer if no existing one found */
+    for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
+        if (timers[index].type == timer_type && timers[index].duration == 0) {
+            timers[index].duration = duration;
+            timers[index].event = event;
+            timers[index].is_suspended = false;
+            return true;
+        }
+    }
+    return false;
 }
