@@ -12,5 +12,6 @@ enum xtimer_t {
 void xtimer_init();
 void xtimer_create(const enum xtimer_t timer_type, const enum event_t event, const uint32_t duration);
 void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event);
+void xtimer_cycle(const enum event_t event);
 
 #endif

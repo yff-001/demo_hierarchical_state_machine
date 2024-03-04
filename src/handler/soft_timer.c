@@ -41,6 +41,19 @@ void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event) {
 
 }
 
+void xtimer_cycle(const enum event_t event) {
+    for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
+        if (timers[index].duration > 0) {
+            if (timers[index].is_suspended == false) {
+                timers[index].duration--;
+                if (timers[index].duration == 0) {
+                    event_queue_put(timers[index].event);
+                }
+            }
+        }
+    }
+}
+
 static bool create_timer(const enum xtimer_t timer_type, const enum event_t event, const uint32_t duration) {
     /* overwrite existing timer if same type */
     for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
