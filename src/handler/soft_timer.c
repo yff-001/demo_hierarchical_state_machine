@@ -3,6 +3,7 @@
 
 #include "soft_timer.h"
 // #include "events.h"
+#include "../event_queue.h"
 
 #define MAX_NUMBER_PERM 5
 #define MAX_NUMBER_SYS  10
@@ -28,7 +29,7 @@ void xtimer_init() {
             timers[index].type = XTIMER_PERM;
         }
         else {
-            timer[index].type = XTIMER_SYS;
+            timers[index].type = XTIMER_SYS;
         }
     }
 }
