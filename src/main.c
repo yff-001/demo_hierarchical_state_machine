@@ -16,22 +16,6 @@
 #include "scheduler.h"
 // #include "state_machine.h"
 
-// enum power_mode_t {
-//     HIGH_POWER,
-//     LOW_POWER,
-//     POWER_DOWN
-// };
-
-// enum use_mode_t {
-//     USER,
-//     SERVICE
-// };
-
-// enum operate_mode_t {
-//     IDLE,
-//     ACTIVE,
-//     CHARGE
-// };
 
 int main() {
     init_device();
