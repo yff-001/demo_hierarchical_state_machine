@@ -18,9 +18,6 @@ enum operate_mode_t {
     CHARGE
 };
 
-// enum power_mode_t current_power_mode = HIGH_POWER;
-// enum use_mode_t current_use_mode = USER;
-// enum operate_mode_t current_operate_mode = IDLE;
 
 void scheduler_init();
 void scheduler_high_power();

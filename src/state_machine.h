@@ -3,21 +3,22 @@
 
 /*  this is an attempt to write my own state machine implementation */
 
-enum state_t {
-    ACTIVE,
-    IDLE
+enum state_machine_result_t {
+    EVENT_HANDLED,
+    EVENT_NOT_HANDLED,
+    TRIGGER_TO_SELF
 };
 
-enum event_t {
-    _abort,
-    _start
-};
+// typedef state_machine_result_t (*state_handler) (state_machine_t* const state);
+// struct state_t {
 
-struct state_machine_t {
-    // state handler
-    // entry action
-    // exit action
-};
+// }
+
+// /* abstract state machine structure */
+// struct state_machine_t {
+//     uint32_t event;
+//     const state_t* state;
+// };
 
 void state_machine_active();
 void state_machine_idle();

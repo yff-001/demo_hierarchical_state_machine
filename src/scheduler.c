@@ -8,10 +8,6 @@
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 
-enum power_mode_t current_power_mode = HIGH_POWER;
-enum use_mode_t current_use_mode = USER;
-enum operate_mode_t current_operate_mode = IDLE;
-
 void scheduler_init() {
     set_sleep_mode(SLEEP_MODE_IDLE);
     sei();
@@ -20,7 +16,7 @@ void scheduler_init() {
 void scheduler_high_power() {
     // event_queue_available();
     // event_queue_get(&e);
-    
+
     for (;;) {
         while (has_timer0_ticked() == 0) {
             sleep_mode();

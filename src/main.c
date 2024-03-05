@@ -36,9 +36,9 @@
 int main() {
     init_device();
 
-    // enum power_mode_t current_power_mode = HIGH_POWER;
-    // enum use_mode_t current_use_mode = USER;
-    // enum operate_mode_t current_operate_mode = IDLE;
+    enum power_mode_t current_power_mode = HIGH_POWER;
+    enum use_mode_t current_use_mode = USER;
+    enum operate_mode_t current_operate_mode = IDLE;
 
     for (;;) {
         switch (0) {
