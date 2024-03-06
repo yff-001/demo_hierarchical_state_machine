@@ -6,6 +6,10 @@ void gpio_start() {
     DDRB |= (1 << PB5);
 }
 
+void gpio_toggle_led() {
+    PORTB ^= (1 << PB5);
+}
+
 void gpio_close() {
     //
 }

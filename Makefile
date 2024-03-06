@@ -47,7 +47,7 @@ size: $(TARGET)
 	avr-size --mcu=$(MCU) --format=avr $(TARGET)
 
 clean:
-	$(RM) -r $(OBJ_DIR)
+	$(RM) -r $(OBJ_DIR)/*
 	$(RM) $(BIN_DIR)/*
 
 .PHONY: all clean upload size

@@ -6,7 +6,9 @@
 #define BAUD_0      250000
 #define UBRR_0      ((F_CPU)/(BAUD_0*8UL)-1)    // see spec sheet: buad rate generator        
 
-void uart0_init() {
+uint8_t (*write_to_buffer)(uint8_t)
+
+void uart0_init(uint8_t (*callback)(uint8_t)) {
     UBRR0L = (uint8_t)UBRR_0;                   // write lower byte
     UBRR0H = (uint8_t)(UBRR_0 >> 8);            // write higher byte
 
@@ -27,10 +29,6 @@ void uart0_puts(const char* message) {
 }
 
 ISR(USART_RX_vect) {
-    // uint8_t u = UDR0;
-    // rx_buffer_index = (rx_buffer_index + 1) % RX_BUFFER_SIZE;
-    // if (rx_buffer_index != rx_buffer_tail) {
-    //     rx_buffer[rx_buffer_head] = u;
-    //     rx_buffer_head = rx_buffer_index;
-    // }
+    uint8_t u = UDR0;
+    write_to_buffer(u);
 }

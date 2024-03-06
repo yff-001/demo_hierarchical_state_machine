@@ -42,7 +42,7 @@ void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event) {
 
 }
 
-void xtimer_cycle(const enum event_t event) {
+void xtimer_task(const enum event_t event) {
     for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
         if (timers[index].duration > 0) {
             if (timers[index].is_suspended == false) {

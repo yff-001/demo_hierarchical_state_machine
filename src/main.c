@@ -1,45 +1,28 @@
-// #include <avr/io.h>
-// #include <avr/interrupt.h>
-// #include <avr/pgmspace.h>
-// #include <avr/sleep.h>
-// #include <avr/wdt.h>
-// #include <util/delay.h>
-
-// #include <stdbool.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
 #include "device.h"
 #include "events.h"
 #include "event_queue.h"
 #include "scheduler.h"
 // #include "state_machine.h"
 
-
 int main() {
-    init_device();
-
-    enum power_mode_t current_power_mode = HIGH_POWER;
-    enum use_mode_t current_use_mode = USER;
-    enum operate_mode_t current_operate_mode = IDLE;
+    scheduler_init();
 
     for (;;) {
-        switch (0) {
+        switch (get_power_mode()) {
             case HIGH_POWER:
                 scheduler_high_power();
-                switch (0) {
+                switch (get_use_mode()) {
                     case USER:
-                        // switch (current_operate_mode) {
-                        //     case IDLE:
-                        //         break;
-                        //     case ACTIVE:
-                        //         break;
-                        //     case CHARGE:
-                        //         break;
-                        //     default:
-                        //         break;
-                        // }
+                        switch (get_operate_mode()) {
+                            case IDLE:
+                                break;
+                            case ACTIVE:
+                                break;
+                            case CHARGE:
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case SERVICE:
                         break;

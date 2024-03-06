@@ -8,4 +8,7 @@
 // volatile uint8_t rx_buffer_head;
 // volatile uint8_t rx_buffer_tail;
 
+void communication_init();
+void communication_task();
+
 #endif
