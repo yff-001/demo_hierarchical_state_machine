@@ -26,6 +26,6 @@ void scheduler_init();
 void scheduler_high_power();
 void scheduler_low_power();
 void shceduler_power_down();
-void dispatch_event();
+// void dispatch_event();
 
 #endif

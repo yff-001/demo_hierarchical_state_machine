@@ -4,9 +4,9 @@
 #include "uart.h"
 
 #define BAUD_0      250000
-#define UBRR_0      ((F_CPU)/(BAUD_0*8UL)-1)    // see spec sheet: buad rate generator        
+#define UBRR_0      ((F_CPU)/(BAUD_0*8UL)-1)    // see spec sheet: buad rate generator
 
-uint8_t (*write_to_buffer)(uint8_t)
+uint8_t (*write_to_buffer)(uint8_t);
 
 void uart0_init(uint8_t (*callback)(uint8_t)) {
     UBRR0L = (uint8_t)UBRR_0;                   // write lower byte

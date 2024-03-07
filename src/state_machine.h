@@ -22,5 +22,6 @@ enum state_machine_result_t {
 
 void state_machine_active();
 void state_machine_idle();
+void run_state_machine();
 
 #endif
