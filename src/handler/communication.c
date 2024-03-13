@@ -1,18 +1,20 @@
 #include "communication.h"
 #include "../driver/uart.h"
 
-// #define RX_BUFFER_SIZE  64
+#define Q_SIZE          8
+#define RX_BUFFER_SIZE  255
 
-// struct circular_buffer_t {
-//     uint8_t* buffer;
-//     uint8_t  head;
-//     uint8_t  tail;
-// };
+/* a circular buffer for events */
+struct q_t {
+    uint8_t* buffer;
+    uint8_t  head;
+    uint8_t  tail;
+};
 
-// volatile uint8_t rx_buffer[RX_BUFFER_SIZE] = {0};
-// volatile uint8_t rx_buffer_index;
-// volatile uint8_t rx_buffer_head;
-// volatile uint8_t rx_buffer_tail;
+volatile uint8_t rx_buffer_index;
+volatile uint8_t rx_buffer_head;
+volatile uint8_t rx_buffer_tail;
+volatile uint8_t rx_buffer[Q_SIZE] = {0};
 
 /*  comm_fsm() is the part taken out of main VS model, it is now systick driven
     set_action() is like any one in modules, fsm sets actions through this function
@@ -21,7 +23,7 @@
     setting up another fsm inside comm seems redundant
     an alternative to this approach is to program comm_fsm into main fsm as a concurrent region
 
-    Vcom 001100 indicate a communicationi request, this should be handled by pon.c
+    Vcom 001100 indicate a communication request, this should be handled by pon.c
 */
 
 enum action_t {
@@ -65,6 +67,7 @@ enum action_t current_action = COMM_ACTION_IDLE;
 static void comm_fsm();
 static void set_action();
 static uint8_t rx_put(uint8_t data);
+static uint8_t q_is_available();
 
 void communication_init() {
     uart0_init(&rx_put);
@@ -77,33 +80,49 @@ void communication_task() {
 }
 
 static void comm_fsm() {
-    //
-    switch (current_state) {
-        case WAIT_SETUP_SEND:
-        switch (current_event) {
-            case
+    /*  I have no choice but to run a while loop here, otherwise
+        events will never be cleared as they are produced
+        at a faster rate. RX interrupts could fire at 120/s
+    */
+    while (q_is_available()) {
+        switch (current_state) {
+            case WAIT_SETUP_SEND:
+            switch (current_event) {
+                case
+            }
+            break;
+            case WAIT_SYNC_TX:
+            break;
+            default:
+            break;
         }
-        break;
-        case WAIT_SYNC_TX:
-        break;
-        default:
-        break;
     }
+    // switch (current_state) {
+    //     case WAIT_SETUP_SEND:
+    //     switch (current_event) {
+    //         case
+    //     }
+    //     break;
+    //     case WAIT_SYNC_TX:
+    //     break;
+    //     default:
+    //     break;
+    // }
 }
 
-static void set_action(enum action_t action) {
-    switch (action) {
-        case COMM_ACTION_IDLE:
-        break;
-        case COMM_ACTION_ENABLE_TX:
-        break;
-        case COMM_ACTION_EXECUTE_COMMAND:
-        /* execute command */
-        break;
-        default:
-        break;
-    }
-}
+// static void set_action(enum action_t action) {
+//     switch (action) {
+//         case COMM_ACTION_IDLE:
+//         break;
+//         case COMM_ACTION_ENABLE_TX:
+//         break;
+//         case COMM_ACTION_EXECUTE_COMMAND:
+//         /* execute command */
+//         break;
+//         default:
+//         break;
+//     }
+// }
 
 /*  This function is interrupt driven, comm fsm is systick driven
     thus they have to be decoupled
