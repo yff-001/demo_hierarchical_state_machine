@@ -34,7 +34,7 @@ $(TARGET): $(OBJ) $(LIBOBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
 $(HEX): $(TARGET)
