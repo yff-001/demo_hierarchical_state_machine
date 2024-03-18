@@ -39,6 +39,8 @@ void scheduler_init() {
     // init_timer1();
 
     /* handlers should be initialized here */
+    communication_init();
+    display_init();
 
     set_sleep_mode(SLEEP_MODE_IDLE);
     // sei();
@@ -46,7 +48,8 @@ void scheduler_init() {
 
 void scheduler_high_power() {
     sei();                                                                      // enable global interrupts
-    for (;;) {
+
+    while (current_power_mode == HIGH_POWER) {
         while (has_timer0_ticked() == 0 && has_timer0_ticked() == 0 && event_queue_available() == 0) {
             sleep_mode();
         }
@@ -66,6 +69,7 @@ void scheduler_high_power() {
 
         run_state_machine();
     }
+
     cli();                                                                      // disable global interrupts
 }
 

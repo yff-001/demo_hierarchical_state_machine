@@ -8,6 +8,9 @@ enum event_t {
     E_MOTOR_ON,
     E_MOTOR_OFF,
 
+    E_LED_ON,
+    E_LED_OFF,
+
     E_VOID
 };
 

@@ -35,7 +35,7 @@ void xtimer_init() {
 }
 
 void xtimer_create(const enum xtimer_t timer_type, const enum event_t event, const uint32_t duration) {
-
+    create_timer(timer_type, event, duration);
 }
 
 void xtimer_cancel(const enum xtimer_t timer_type, const enum event_t event) {

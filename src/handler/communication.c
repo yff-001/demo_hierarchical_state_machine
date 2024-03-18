@@ -62,12 +62,14 @@ enum state_t {
 };
 
 enum state_t current_state = WAIT_SETUP_SEND;
+enum event_t current_event = E_COMM_DISABLE;
 enum action_t current_action = COMM_ACTION_IDLE;
 
 static void comm_fsm();
 static void set_action();
 static uint8_t rx_put(uint8_t data);
 static uint8_t q_is_available();
+static uint8_t signal_is_available();
 
 void communication_init() {
     uart0_init(&rx_put);
@@ -88,7 +90,8 @@ static void comm_fsm() {
         switch (current_state) {
             case WAIT_SETUP_SEND:
             switch (current_event) {
-                case
+                case E_COMM_DISABLE:
+                break;
             }
             break;
             case WAIT_SYNC_TX:
@@ -147,4 +150,12 @@ static uint8_t rx_put(uint8_t data) {
         default:
         break;
     }
+}
+
+static uint8_t q_is_available() {
+    //
+}
+
+static uint8_t signal_is_available() {
+    //
 }

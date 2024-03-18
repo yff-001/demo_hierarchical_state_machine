@@ -18,6 +18,9 @@ void state_machine_idle() {
 
 void run_state_machine() {
     enum event_t event;
-    event_queue_get(&event);
-    // dispatch_event();
+    event = event_queue_get(&event);
+    switch (event) {
+        case 0:
+        break;
+    }
 }
