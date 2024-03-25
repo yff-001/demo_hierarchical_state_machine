@@ -21,7 +21,7 @@ OBJ_DIR = obj
 BIN_DIR = bin
 
 # Source files
-SRC = $(shell find $(SRC_DIR) -name *.c)
+SRC = $(shell dir /s /b $(SRC_DIR)\*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 # Executable
