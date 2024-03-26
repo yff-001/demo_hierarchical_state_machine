@@ -22,32 +22,36 @@ BIN_DIR = bin
 
 # Source files
 SRC = $(shell dir /s /b $(SRC_DIR)\*.c)
-OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+OBJ := $(subst $(SRC_DIR),$(OBJ_DIR),$(SRC:.c=.o))
+
+all:
+	@echo $(OBJ_DIR)
+	@echo $(SRC)
 
 # Executable
-TARGET = $(BIN_DIR)/app.elf
-HEX = $(BIN_DIR)/app.hex
+# TARGET = $(BIN_DIR)/app.elf
+# HEX = $(BIN_DIR)/app.hex
 
-all: $(TARGET) $(HEX)
+# all: $(TARGET) $(HEX)
 
-$(TARGET): $(OBJ) $(LIBOBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+# $(TARGET): $(OBJ) $(LIBOBJ)
+# 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
+# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# 	@mkdir -p $(dir $@)
+# 	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
-$(HEX): $(TARGET)
-	avr-objcopy -O ihex -R .eeprom $(TARGET) $(HEX)
+# $(HEX): $(TARGET)
+# 	avr-objcopy -O ihex -R .eeprom $(TARGET) $(HEX)
 
-upload: $(HEX)
-	avrdude -b$(BAUDRATE) -c$(PROGRAMMER) -P$(PORT) -p$(MCU) -D -v -V -U flash:w:$(HEX)
+# upload: $(HEX)
+# 	avrdude -b$(BAUDRATE) -c$(PROGRAMMER) -P$(PORT) -p$(MCU) -D -v -V -U flash:w:$(HEX)
 
-size: $(TARGET)
-	avr-size --mcu=$(MCU) --format=avr $(TARGET)
+# size: $(TARGET)
+# 	avr-size --mcu=$(MCU) --format=avr $(TARGET)
 
-clean:
-	$(RM) -r $(OBJ_DIR)/*
-	$(RM) $(BIN_DIR)/*
+# clean:
+# 	$(RM) -r $(OBJ_DIR)/*
+# 	$(RM) $(BIN_DIR)/*
 
-.PHONY: all clean upload size
+# .PHONY: all clean upload size
