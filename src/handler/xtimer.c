@@ -1,18 +1,18 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "soft_timer.h"
+#include "xtimer.h"
 // #include "events.h"
 #include "../event_queue.h"
-
+#include "../driver/gpio.h"
 #define MAX_NUMBER_PERM 5
 #define MAX_NUMBER_SYS  10
 
 struct timer_t {
-    uint32_t duration;
-    enum event_t event;
-    bool is_suspended;
     enum xtimer_t type;
+    enum event_t event;
+    uint32_t duration;
+    bool is_suspended;
 };
 
 struct timer_t timers[MAX_NUMBER_PERM + MAX_NUMBER_SYS];
@@ -24,7 +24,7 @@ void xtimer_init() {
     for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
         timers[index].duration = 0;
         timers[index].event = E_VOID;
-        timers[index].is_suspended = false;
+        timers[index].is_suspended = true;
         if (index < MAX_NUMBER_PERM) {
             timers[index].type = XTIMER_PERM;
         }

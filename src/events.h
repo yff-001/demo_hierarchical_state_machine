@@ -11,6 +11,8 @@ enum event_t {
     E_LED_ON,
     E_LED_OFF,
 
+    E_TIMER_DEFAULT,
+
     E_VOID
 };
 

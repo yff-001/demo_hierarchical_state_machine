@@ -1,7 +1,9 @@
-#ifndef SOFT_TIMER_H
-#define SOFT_TIMER_H
+#ifndef XTIMER_H
+#define XTIMER_H
 
 #include "../events.h"
+
+#include <stdint.h>
 
 enum xtimer_t {
     XTIMER_PERM,

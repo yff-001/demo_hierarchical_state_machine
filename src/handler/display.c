@@ -1,8 +1,8 @@
 #include "display.h"
 
 #include "../driver/gpio.h"
-#include <stdint.h>                     // include this before soft_timer.h
-#include "soft_timer.h"
+#include <stdint.h>                     // include this before xtimer.h
+#include "xtimer.h"
 
 enum state_t {
     LED_ON,
@@ -21,16 +21,16 @@ void display_init() {
 
 void display_task() {
     //
-    // gpio_toggle_led();
-    switch (current_state) {
-        case LED_OFF:
-        /* entry */
-        xtimer_create(XTIMER_PERM, E_LED_ON, 1);
-        gpio_toggle_led();
-        break;
-        case LED_ON:
-        break;
-        default:
-        break;
-    }
+    gpio_toggle_led();
+    // switch (current_state) {
+    //     case LED_OFF:
+    //     /* entry */
+    //     xtimer_create(XTIMER_PERM, E_LED_ON, 1);
+    //     gpio_toggle_led();
+    //     break;
+    //     case LED_ON:
+    //     break;
+    //     default:
+    //     break;
+    // }
 }

@@ -10,7 +10,7 @@
 
 #include "handler/communication.h"
 #include "handler/display.h"
-#include "handler/soft_timer.h"
+#include "handler/xtimer.h"
 
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
@@ -33,41 +33,46 @@ enum operate_mode_t get_operate_mode() {
 
 void scheduler_init() {
     /* these should really be initialized in handlers */
-    // gpio_start();
+    gpio_start();
     // uart0_init();
-    // init_timer0();
-    // init_timer1();
+    init_systick();
+    init_permtick();
 
     /* handlers should be initialized here */
     communication_init();
     display_init();
+    xtimer_init();
+
+    xtimer_create(XTIMER_PERM, E_TIMER_DEFAULT, 5);
+    // xtimer_create(XTIMER_PERM, E_TIMER_DEFAULT, 2);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
-    // sei();
 }
 
 void scheduler_high_power() {
     sei();                                                                      // enable global interrupts
 
     while (current_power_mode == HIGH_POWER) {
-        while (has_timer0_ticked() == 0 && has_timer0_ticked() == 0 && event_queue_available() == 0) {
+        while (has_systick_elapsed() == 0 && has_permtick_elapsed() == 0 /* && event_queue_available() == 0 */) {
             sleep_mode();
         }
 
-        if (has_timer1_ticked() == 1) {
-            timer1_tick_count();
+        if (has_permtick_elapsed() == 1) {
+            timer_permtick_count();
+
+            // display_task();
             xtimer_task(XTIMER_PERM);
         }
 
-        if (has_timer0_ticked() == 1) {
-            timer0_tick_count();
+        if (has_systick_elapsed() == 1) {
+            timer_systick_count();
 
             communication_task();
-            display_task();
+            // display_task();
             xtimer_task(XTIMER_SYS);
         }
 
-        run_state_machine();
+        dispatch_event();
     }
 
     cli();                                                                      // disable global interrupts
