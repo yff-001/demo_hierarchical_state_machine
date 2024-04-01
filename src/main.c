@@ -2,7 +2,6 @@
 // #include "events.h"
 // #include "event_queue.h"
 #include "scheduler.h"
-// #include "state_machine.h"
 
 int main() {
     scheduler_init();
