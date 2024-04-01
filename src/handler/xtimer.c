@@ -24,7 +24,7 @@ void xtimer_init() {
     for (uint8_t index = 0; index < (MAX_NUMBER_PERM + MAX_NUMBER_SYS); index++) {
         timers[index].duration = 0;
         timers[index].event = E_VOID;
-        timers[index].is_suspended = true;
+        timers[index].is_suspended = false;
         if (index < MAX_NUMBER_PERM) {
             timers[index].type = XTIMER_PERM;
         }

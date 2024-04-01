@@ -53,7 +53,7 @@ void scheduler_high_power() {
     sei();                                                                      // enable global interrupts
 
     while (current_power_mode == HIGH_POWER) {
-        while (has_systick_elapsed() == 0 && has_permtick_elapsed() == 0 /* && event_queue_available() == 0 */) {
+        while (has_systick_elapsed() == 0 && has_permtick_elapsed() == 0 && event_queue_available() == 0) {
             sleep_mode();
         }
 
@@ -73,7 +73,8 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            dispatch_event();
+            // dispatch_event();
+            gpio_toggle_led();
         }
     }
 
