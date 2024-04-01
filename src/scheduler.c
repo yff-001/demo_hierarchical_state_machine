@@ -72,7 +72,9 @@ void scheduler_high_power() {
             xtimer_task(XTIMER_SYS);
         }
 
-        dispatch_event();
+        if (event_queue_available()) {
+            dispatch_event();
+        }
     }
 
     cli();                                                                      // disable global interrupts

@@ -29,10 +29,7 @@ void state_machine_idle() {
 
 void dispatch_event() {
     enum event_t event;
-    if (event_queue_available) {
-        event = event_queue_get(&event);
-    }
-    // event = event_queue_get(&event);
+    event = event_queue_get(&event);
     switch (current_machine_state) {
         case IDLE:
         if (event == E_TIMER_DEFAULT) {
