@@ -8,7 +8,7 @@
 enum machine_state_t {
     IDLE,
     ACTIVE,
-    STOPE
+    STOP
 };
 
 enum machine_state_t current_machine_state = IDLE;
