@@ -6,12 +6,12 @@
 #include "handler/xtimer.h"
 
 enum machine_state_t {
-    IDLE,
-    ACTIVE,
-    STOP
+    S1,
+    S2,
+    S3
 };
 
-enum machine_state_t current_machine_state = IDLE;
+enum machine_state_t current_machine_state = S1;
 
 void state_machine_active() {
     //
@@ -29,16 +29,17 @@ void state_machine_idle() {
 
 void dispatch_event() {
     enum event_t event;
-    event = event_queue_get(&event);
+    event_queue_get(&event);
     switch (current_machine_state) {
-        case IDLE:
-        if (event == E_TIMER_DEFAULT) {
+        case S1:
+        if (event == E_LED_ON) {
             gpio_toggle_led();
-            current_machine_state = ACTIVE;
+            // current_machine_state = S2;
+            xtimer_create(XTIMER_PERM, E_LED_ON, 1);
         }
         break;
 
-        case ACTIVE:
+        case S2:
         break;
 
         default:

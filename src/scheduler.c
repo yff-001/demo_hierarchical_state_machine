@@ -34,7 +34,7 @@ enum operate_mode_t get_operate_mode() {
 void scheduler_init() {
     /* these should really be initialized in handlers */
     gpio_start();
-    // uart0_init();
+
     init_systick();
     init_permtick();
 
@@ -43,8 +43,7 @@ void scheduler_init() {
     display_init();
     xtimer_init();
 
-    xtimer_create(XTIMER_PERM, E_TIMER_DEFAULT, 5);
-    // xtimer_create(XTIMER_PERM, E_TIMER_DEFAULT, 2);
+    xtimer_create(XTIMER_PERM, E_LED_ON, 1);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
 }
@@ -73,8 +72,7 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            // dispatch_event();
-            gpio_toggle_led();
+            dispatch_event();
         }
     }
 
