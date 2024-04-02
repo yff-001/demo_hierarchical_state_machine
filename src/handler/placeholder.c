@@ -47,12 +47,9 @@ void rx_put(uint8_t data);
 void communication_init() {
     uart0_init(&rx_put);
 
-    /*  thi set of values are used to simulate entering COMM_STEP_1 state
-        from the get go
-    */
     last_state = COMM_IDLE;
-    current_state = COMM_STEP_1;
-    next_state = COMM_STEP_1;
+    current_state = COMM_IDLE;
+    next_state = COMM_IDLE;
 }
 
 /*  a section performs actions similar to pon.c
@@ -89,6 +86,17 @@ void communication_task() {
         switch (current_state) {
             case COMM_IDLE:
             /* UART0 power should be cut at this stage */
+            if (last_state != current_state) {
+                /* this will never be reached */
+            }
+            else {
+                if (1) {
+                    next_state = COMM_STEP_1;                                   // it is here to kickstart the sequence
+                }
+            }
+            if (next_state != current_state) {
+
+            }
             break;
 
             case COMM_STEP_1:
@@ -174,7 +182,7 @@ void communication_task() {
 
             case COMM_STEP_6:
             if (last_state != current_state) {
-                count = /* message byte - 2 */;
+                count = 3 /* message byte - 2 */;
                 gpio_toggle_g();
             }
             else {
