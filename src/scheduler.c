@@ -20,15 +20,15 @@ enum use_mode_t current_use_mode = USER;
 enum operate_mode_t current_operate_mode = IDLE;
 
 enum power_mode_t get_power_mode() {
-    return HIGH_POWER;
+    return current_power_mode;
 }
 
 enum use_mode_t get_use_mode() {
-    return USER;
+    return current_use_mode;
 }
 
 enum operate_mode_t get_operate_mode() {
-    return IDLE;
+    return current_operate_mode;
 }
 
 void scheduler_init() {
@@ -86,7 +86,3 @@ void scheduler_low_power() {
 void shceduler_power_down() {
     //
 }
-
-// void dispatch_event() {
-
-// }

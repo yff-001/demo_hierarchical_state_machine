@@ -73,6 +73,7 @@ static uint8_t signal_is_available();
 
 void communication_init() {
     uart0_init(&rx_put);
+    uart0_puts("hello world!\r\n");
 }
 
 void communication_task() {
