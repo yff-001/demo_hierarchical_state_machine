@@ -1,27 +1,28 @@
 #ifndef STATE_MACHINE_H
 #define STATE_MACHINE_H
 
-/*  this is an attempt to write my own state machine implementation */
+#include <stdint.h>
 
-enum state_machine_result_t {
-    EVENT_HANDLED,
-    EVENT_NOT_HANDLED,
-    TRIGGER_TO_SELF
+typedef struct state_t state_t;
+typedef struct state_machine_t state_machine_t;
+typedef void (*state_handler)(struct state_machine_t* state);
+
+struct state_t {
+    state_handler handler;
+    state_handler entry;
+    state_handler exit;
+
+    const state_t* const parent;
+    const state_t* const child;
+    uint8_t level;
 };
 
-// typedef state_machine_result_t (*state_handler) (state_machine_t* const state);
-// struct state_t {
+struct state_machine_t {
+    uint8_t event;
+    const state_t* state;
+};
 
-// }
-
-// /* abstract state machine structure */
-// struct state_machine_t {
-//     uint32_t event;
-//     const state_t* state;
-// };
-
-void state_machine_active();
-void state_machine_idle();
-void dispatch_event();
+void dispatch_event(state_machine_t* const p_state_machines[]);
+void traverse_state(state_machine_t* const p_state_machines[]);
 
 #endif

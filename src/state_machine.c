@@ -5,78 +5,115 @@
 #include "driver/gpio.h"
 #include "handler/xtimer.h"
 
-enum machine_state_t {
-    USER,
-    SERVICE,
+enum operate_state_t {
     IDLE,
-    ACTIVE,
+    MOTOR_ON,
     CHARGE
 };
 
-enum comm_state_t {
-    COMM_IDLE,
-    C1,
-    C2,
-    C3
+enum result_t {
+    EVENT_HANDLED,
+    EVENT_UNHANDLED,
+    TRIGGER_TO_SELF
 };
 
-static enum machine_state_t current_machine_state = USER;
+static void idle_handler(state_machine_t* const state);
+static void idle_entry(state_machine_t* const state);
+static void idle_exit(state_machine_t* const state);
+static void motor_on_handler(state_machine_t* const state);
+static void motor_on_entry(state_machine_t* const state);
+static void motor_on_exit(state_machine_t* const state);
+static void charge_handler(state_machine_t* const state);
+static void charge_entry(state_machine_t* const state);
+static void charge_exit(state_machine_t* const state);
 
-static enum comm_state_t comm_last_state = C1;
-static enum comm_state_t comm_current_state = C1;
-static enum comm_state_t comm_next_state = C1;
+void dispatch_event(state_machine_t* const p_state_machines[]) {
+    /* it is possible to iterate a list of state machines */
 
-void state_machine_active() {
-    //
-    for (;;) {
-        //
-    }
-}
+    do {
+        /* call state handler */
 
-void state_machine_idle() {
-    //
-    for (;;) {
-        //
-    }
-}
+        switch (0) {
+            case EVENT_HANDLED:
 
-void dispatch_event() {
-    enum event_t event;
-    event_queue_get(&event);
+            break;
 
-    switch (current_machine_state) {
-        case USER:
-        /* ENTRY */
-        if (event == E_BUTTON_PRESS) {
-            gpio_toggle_led();
-            current_machine_state = IDLE;
-            xtimer_create(XTIMER_PERM, E_LED_ON, 1);
+            case EVENT_UNHANDLED:
+            do {
+                // p_state = p_state -> parent;
+            } while (0 /* */);
+            break;
+
+            default:
+            break;
+
         }
-        /* EXIT */
-        break;
+    } while (1);
+}
 
-        case SERVICE:
-        break;
+void traverse_state(state_machine_t* const p_state_machines[]) {
+    //
+}
 
-        case IDLE:
-        break;
-
-        case ACTIVE:
-        break;
-
-        case CHARGE:
-        break;
-
-        default:
-        break;
+static const state_t operate_modes[] = {
+    [IDLE] = {
+        .handler = idle_handler,
+        .entry   = idle_entry,
+        .exit    = idle_exit,
+        .parent  = 0,
+        .child   = 0,
+        .level   = 0,
+    },
+    [MOTOR_ON] = {
+        .handler = motor_on_handler,
+        .entry   = motor_on_entry,
+        .exit    = motor_on_exit,
+        .parent  = 0,
+        .child   = 0,
+        .level   = 0,
+    },
+    [CHARGE] = {
+        .handler = charge_handler,
+        .entry   = charge_entry,
+        .exit    = charge_exit,
+        .parent  = 0,
+        .child   = 0,
+        .level   = 0,
     }
+};
 
-    do
-    {
-        comm_current_state = comm_next_state;
+static void idle_handler(state_machine_t* const state) {
+    //
+}
 
-        /* code */
+static void idle_entry(state_machine_t* const state) {
+    //
+}
 
-        comm_last_state = comm_current_state;
-    } while (comm_current_state != comm_next_state);
+static void idle_exit(state_machine_t* const state) {
+    //
+}
+
+static void motor_on_handler(state_machine_t* const state) {
+    //
+}
+
+static void motor_on_entry(state_machine_t* const state) {
+    //
+}
+
+static void motor_on_exit(state_machine_t* const state) {
+    //
+}
+
+static void charge_handler(state_machine_t* const state) {
+    //
+}
+
+static void charge_entry(state_machine_t* const state) {
+    //
+}
+
+static void charge_exit(state_machine_t* const state) {
+    //
 }
