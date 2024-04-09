@@ -5,49 +5,64 @@
 #include "driver/gpio.h"
 #include "handler/xtimer.h"
 
+#define EXECUTE_ACTION(handler, triggered, state_machine)  \
+do {                                                        \
+    if (handler != 0) {                                     \
+        result = handler(state_machine);                    \
+        switch (reslut) {                                   \
+            case TRIGGER_TO_SELF:                           \
+                triggered = true;                           \
+            case EVENT_HANDLED:                             \
+                break;                                      \
+            default:                                        \
+                return result;                              \
+        }                                                   \
+    }                                                       \
+} while (0)
+
 enum operate_state_t {
     IDLE,
     MOTOR_ON,
     CHARGE
 };
 
-enum result_t {
-    EVENT_HANDLED,
-    EVENT_UNHANDLED,
-    TRIGGER_TO_SELF
-};
-
-static void idle_handler(state_machine_t* const state);
-static void idle_entry(state_machine_t* const state);
-static void idle_exit(state_machine_t* const state);
-static void motor_on_handler(state_machine_t* const state);
-static void motor_on_entry(state_machine_t* const state);
-static void motor_on_exit(state_machine_t* const state);
-static void charge_handler(state_machine_t* const state);
-static void charge_entry(state_machine_t* const state);
-static void charge_exit(state_machine_t* const state);
+static enum result_t idle_action(state_machine_t* const state);
+static enum result_t idle_entry(state_machine_t* const state);
+static enum result_t idle_exit(state_machine_t* const state);
+static enum result_t motor_on_action(state_machine_t* const state);
+static enum result_t motor_on_entry(state_machine_t* const state);
+static enum result_t motor_on_exit(state_machine_t* const state);
+static enum result_t charge_action(state_machine_t* const state);
+static enum result_t charge_entry(state_machine_t* const state);
+static enum result_t charge_exit(state_machine_t* const state);
 
 void dispatch_event(state_machine_t* const p_state_machines[]) {
     /* it is possible to iterate a list of state machines */
 
     do {
-        /* call state handler */
+        const state_t* p_state = p_state_machines[0]->state;
 
-        switch (0) {
+        /* call state handler */
+        enum result_t result = p_state->handler(p_state_machines[0]);
+
+        switch (result) {
             case EVENT_HANDLED:
 
-            break;
+                break;
 
-            case EVENT_UNHANDLED:
-            do {
-                // p_state = p_state -> parent;
-            } while (0 /* */);
-            break;
+            /* specific to a hierarchical state machine */
+            case EVENT_NOT_HANDLED:
+                do {
+                    // p_state = p_state -> parent;
+                } while (0 /* */);
+                break;
 
             default:
-            break;
+                break;
 
         }
+
+        break;
     } while (1);
 }
 
@@ -57,7 +72,7 @@ void traverse_state(state_machine_t* const p_state_machines[]) {
 
 static const state_t operate_modes[] = {
     [IDLE] = {
-        .handler = idle_handler,
+        .handler = idle_action,
         .entry   = idle_entry,
         .exit    = idle_exit,
         .parent  = 0,
@@ -65,7 +80,7 @@ static const state_t operate_modes[] = {
         .level   = 0,
     },
     [MOTOR_ON] = {
-        .handler = motor_on_handler,
+        .handler = motor_on_action,
         .entry   = motor_on_entry,
         .exit    = motor_on_exit,
         .parent  = 0,
@@ -73,7 +88,7 @@ static const state_t operate_modes[] = {
         .level   = 0,
     },
     [CHARGE] = {
-        .handler = charge_handler,
+        .handler = charge_action,
         .entry   = charge_entry,
         .exit    = charge_exit,
         .parent  = 0,
@@ -82,38 +97,38 @@ static const state_t operate_modes[] = {
     }
 };
 
-static void idle_handler(state_machine_t* const state) {
+static enum result_t idle_action(state_machine_t* const state) {
     //
 }
 
-static void idle_entry(state_machine_t* const state) {
+static enum result_t idle_entry(state_machine_t* const state) {
     //
 }
 
-static void idle_exit(state_machine_t* const state) {
+static enum result_t idle_exit(state_machine_t* const state) {
     //
 }
 
-static void motor_on_handler(state_machine_t* const state) {
+static enum result_t motor_on_action(state_machine_t* const state) {
     //
 }
 
-static void motor_on_entry(state_machine_t* const state) {
+static enum result_t motor_on_entry(state_machine_t* const state) {
     //
 }
 
-static void motor_on_exit(state_machine_t* const state) {
+static enum result_t motor_on_exit(state_machine_t* const state) {
     //
 }
 
-static void charge_handler(state_machine_t* const state) {
+static enum result_t charge_action(state_machine_t* const state) {
     //
 }
 
-static void charge_entry(state_machine_t* const state) {
+static enum result_t charge_entry(state_machine_t* const state) {
     //
 }
 
-static void charge_exit(state_machine_t* const state) {
+static enum result_t charge_exit(state_machine_t* const state) {
     //
 }
