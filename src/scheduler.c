@@ -17,22 +17,12 @@
 #include <avr/sleep.h>
 
 enum power_mode_t current_power_mode = HIGH_POWER;
-// enum use_mode_t current_use_mode = USER;
-// enum operate_mode_t current_operate_mode = IDLE;
 
 enum power_mode_t get_power_mode() {
     return current_power_mode;
 }
 
-// enum use_mode_t get_use_mode() {
-//     return current_use_mode;
-// }
-
-// enum operate_mode_t get_operate_mode() {
-//     return current_operate_mode;
-// }
-
-state_machine_t* const sm[1];
+state_machine_t const machine;
 
 void scheduler_init() {
     /* these should really be initialized in handlers */
@@ -45,6 +35,8 @@ void scheduler_init() {
     communication_init();
     display_init();
     xtimer_init();
+
+    state_machine_init(&machine);
 
     xtimer_create(XTIMER_PERM, E_LED_ON, 1);
 
@@ -75,7 +67,7 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            dispatch_event(sm);                                                   // since internal of sm in the same file, seems unnecessary to pass sm pointer to function
+            dispatch_event(&machine);                                                   // since internal of sm in the same file, seems unnecessary to pass sm pointer to function
         }
     }
 

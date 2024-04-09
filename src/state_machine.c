@@ -36,14 +36,14 @@ static enum result_t charge_action(state_machine_t* const state);
 static enum result_t charge_entry(state_machine_t* const state);
 static enum result_t charge_exit(state_machine_t* const state);
 
-void dispatch_event(state_machine_t* const p_state_machines[]) {
+void dispatch_event(state_machine_t* const p_state_machines) {
     /* it is possible to iterate a list of state machines */
 
     do {
-        const state_t* p_state = p_state_machines[0]->state;
+        const state_t* p_state = p_state_machines->state;
 
         /* call state handler */
-        enum result_t result = p_state->handler(p_state_machines[0]);
+        enum result_t result = p_state->handler(p_state_machines);
 
         switch (result) {
             case EVENT_HANDLED:
@@ -66,7 +66,7 @@ void dispatch_event(state_machine_t* const p_state_machines[]) {
     } while (1);
 }
 
-void traverse_state(state_machine_t* const p_state_machines[]) {
+void traverse_state(state_machine_t* const p_state_machines) {
     //
 }
 
@@ -97,8 +97,13 @@ static const state_t operate_modes[] = {
     }
 };
 
+void state_machine_init(state_machine_t* const p_state_machines) {
+    p_state_machines->state = &operate_modes[IDLE];
+}
+
 static enum result_t idle_action(state_machine_t* const state) {
-    //
+    gpio_toggle_led();
+    return EVENT_HANDLED;
 }
 
 static enum result_t idle_entry(state_machine_t* const state) {

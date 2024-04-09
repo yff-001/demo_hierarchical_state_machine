@@ -28,7 +28,9 @@ struct state_machine_t {
     const state_t* state;
 };
 
-void dispatch_event(state_machine_t* const p_state_machines[]);
-void traverse_state(state_machine_t* const p_state_machines[]);
+void dispatch_event(state_machine_t* const p_state_machines);
+void traverse_state(state_machine_t* const p_state_machines);
+
+void state_machine_init(state_machine_t* const p_state_machines);
 
 #endif
