@@ -22,7 +22,7 @@ enum power_mode_t get_power_mode() {
     return current_power_mode;
 }
 
-state_machine_t const machine;
+state_machine_t machine;
 
 void scheduler_init() {
     /* these should really be initialized in handlers */
