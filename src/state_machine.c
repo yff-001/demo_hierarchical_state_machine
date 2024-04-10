@@ -55,13 +55,15 @@ void dispatch_event(state_machine_t* const p_state_machines) {
 
             case EVENT_NOT_HANDLED:
                 do {
-                    // p_state = p_state -> parent;
-                } while (0 /* */);
-                break;
+                    if (p_state->parent == 0) {
+                        return EVENT_NOT_HANDLED;
+                    }
+                    p_state = p_state->parent;
+                } while (p_state->handler == 0);
+                continue;
 
             default:
-                break;
-
+                return result;
         }
 
         break;
@@ -110,7 +112,7 @@ static enum result_t idle_action(state_machine_t* const state) {
 }
 
 static enum result_t idle_entry(state_machine_t* const state) {
-    //
+    return EVENT_HANDLED;
 }
 
 static enum result_t idle_exit(state_machine_t* const state) {

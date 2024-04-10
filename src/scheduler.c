@@ -38,7 +38,7 @@ void scheduler_init() {
 
     state_machine_init(&machine);
 
-    xtimer_create(XTIMER_PERM, E_LED_ON, 1);
+    xtimer_create(XTIMER_PERM, E_LED_ON, 2);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
 }
