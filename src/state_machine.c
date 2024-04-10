@@ -37,6 +37,9 @@ static enum result_t charge_entry(state_machine_t* const state);
 static enum result_t charge_exit(state_machine_t* const state);
 
 void dispatch_event(state_machine_t* const p_state_machines) {
+    enum event_t event;
+    event_queue_get(&event);
+
     /* it is possible to iterate a list of state machines */
 
     do {
@@ -47,10 +50,9 @@ void dispatch_event(state_machine_t* const p_state_machines) {
 
         switch (result) {
             case EVENT_HANDLED:
-
+                gpio_toggle_led();
                 break;
 
-            /* specific to a hierarchical state machine */
             case EVENT_NOT_HANDLED:
                 do {
                     // p_state = p_state -> parent;
@@ -99,10 +101,11 @@ static const state_t operate_modes[] = {
 
 void state_machine_init(state_machine_t* const p_state_machines) {
     p_state_machines->state = &operate_modes[IDLE];
+    idle_entry(p_state_machines);
 }
 
 static enum result_t idle_action(state_machine_t* const state) {
-    gpio_toggle_led();
+    // gpio_toggle_led();
     return EVENT_HANDLED;
 }
 

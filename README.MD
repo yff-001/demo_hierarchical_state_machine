@@ -17,7 +17,7 @@ This project serves as a template for future AVR MCU projects. It contains a pre
 
 ## Project Overview
 
-Provide a brief overview of the project, explaining its purpose and functionality.
+Implement state machine with different levels of states.
 
 ## Getting Started
 
@@ -25,7 +25,7 @@ Explain the necessary steps to get started with the project. Include any depende
 
 ## Project Structure
 
-Describe the structure of the project directory and highlight the key files and folders. 
+Describe the structure of the project directory and highlight the key files and folders.
 
 ## Configuration
 
