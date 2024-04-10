@@ -67,7 +67,7 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            dispatch_event(&machine);                                                   // since internal of sm in the same file, seems unnecessary to pass sm pointer to function
+            dispatch_event(&machine);
         }
     }
 
