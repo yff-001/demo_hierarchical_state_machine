@@ -4,6 +4,7 @@
 #include "event_queue.h"
 
 #include "state_machine.h"
+#include "demo_hsm.h"
 
 #include "driver/gpio.h"
 #include "driver/timers.h"
