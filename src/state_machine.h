@@ -24,12 +24,11 @@ struct state_t {
 };
 
 struct state_machine_t {
-    uint8_t event;
     const state_t* state;
 };
 
 void dispatch_event(state_machine_t* const p_state_machines);
-void traverse_state(state_machine_t* const p_state_machines);
+void traverse_state(state_machine_t* const p_state_machines, const state_t* p_target_state);
 
 void state_machine_init(state_machine_t* const p_state_machines);
 
