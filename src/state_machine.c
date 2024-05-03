@@ -1,48 +1,67 @@
 #include "state_machine.h"
-#include "events.h"
-#include "event_queue.h"
+#include "stateMachine.h"
 
-#include "driver/gpio.h"
-#include "handler/xtimer.h"
+enum event_t {Event_dummy};
 
-enum machine_state_t {
-    S1,
-    S2,
-    S3
+struct stateMachine sm_device;
+
+static void entryAction( void *stateData, struct event *event );
+static void exitAction( void *stateData, struct event *event );
+static void transAction( void *oldStateData, struct event *event, void *newStateData );
+static bool guard( void *condition, struct event *event );
+
+static struct state user, service, idle, run_motor, charge, error;
+
+static struct state user =
+{
+    .data = "user",
+    .entryAction = &entryAction,
+    .exitAction = &exitAction,
+    .transitions = (struct transition[]) {Event_dummy, (void *)'a', &guard, &transAction, &service},
+    .numTransitions = 1,
 };
 
-enum machine_state_t current_machine_state = S1;
+static struct state service =
+{
+    .data = "user",
+    .entryAction = &entryAction,
+    .exitAction = &exitAction,
+    .transitions = (struct transition[]) {Event_dummy, (void *)'a', &guard, &transAction, &user},
+    .numTransitions = 1,
+};
 
-void state_machine_active() {
+static struct state error =
+{
+    .data = "Error",
+    .entryAction = &entryAction,
+};
+
+static void entryAction(void *stateData, struct event *event)
+{
     //
-    for (;;) {
-        //
-    }
 }
 
-void state_machine_idle() {
+static void exitAction(void *stateData, struct event *event)
+{
     //
-    for (;;) {
-        //
-    }
 }
 
-void dispatch_event() {
-    enum event_t event;
-    event_queue_get(&event);
-    switch (current_machine_state) {
-        case S1:
-        if (event == E_LED_ON) {
-            gpio_toggle_led();
-            // current_machine_state = S2;
-            xtimer_create(XTIMER_PERM, E_LED_ON, 1);
-        }
-        break;
+static void transAction(void *oldStateData, struct event *event, void *newStateData)
+{
+    //
+}
 
-        case S2:
-        break;
+static bool guard(void *condition, struct event *event)
+{
+    //
+}
 
-        default:
-        break;
-    }
+void state_machine_init()
+{
+    stateM_init(&sm_device, &user, &error);
+}
+
+void state_machine_task()
+{
+    //
 }

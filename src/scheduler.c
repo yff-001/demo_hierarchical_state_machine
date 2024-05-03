@@ -43,6 +43,8 @@ void scheduler_init() {
     display_init();
     xtimer_init();
 
+    state_machine_init();
+
     xtimer_create(XTIMER_PERM, E_LED_ON, 1);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
@@ -72,7 +74,7 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            dispatch_event();
+            state_machine_task();
         }
     }
 
