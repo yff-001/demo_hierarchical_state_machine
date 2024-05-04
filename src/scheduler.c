@@ -45,6 +45,8 @@ void scheduler_init() {
 
     state_machine_init();
 
+    uart0_puts("system ready.\r\n");
+
     xtimer_create(XTIMER_PERM, E_LED_ON, 1);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
@@ -74,6 +76,8 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
+            enum event_t event;
+            event_queue_get(&event);
             state_machine_task();
         }
     }
