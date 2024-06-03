@@ -8,8 +8,8 @@
 #define TAKE_ACTION(handler, triggered, state_machine)     \
 do {                                                        \
     if (handler != 0) {                                     \
-        result = handler(state_machine);                    \
-        switch (reslut) {                                   \
+        enum result_t result = handler(state_machine);                    \
+        switch (result) {                                   \
             case TRIGGER_TO_SELF:                           \
                 triggered = 1;                           \
             case EVENT_HANDLED:                             \
@@ -47,7 +47,7 @@ static enum result_t charge_action(state_machine_t* const state);
 static enum result_t charge_entry(state_machine_t* const state);
 static enum result_t charge_exit(state_machine_t* const state);
 
-void dispatch_event(state_machine_t* const p_state_machines) {
+enum result_t dispatch_event(state_machine_t* const p_state_machines) {
     enum event_t event;
     event_queue_get(&event);
 
@@ -81,8 +81,8 @@ void dispatch_event(state_machine_t* const p_state_machines) {
     } while (1);
 }
 
-void traverse_state(state_machine_t* const p_state_machines, const state_t* p_target_state) {
-    cosnt state_t* p_source_state = p_state_machines->state;
+enum result_t traverse_state(state_machine_t* const p_state_machines, const state_t* p_target_state) {
+    const state_t* p_source_state = p_state_machines->state;
     p_state_machines->state = p_target_state;
 
     int trigger_to_self = 0;
@@ -187,7 +187,6 @@ static enum result_t user_action(state_machine_t* const state, enum event_t even
     switch (event) {
         case E_COMM_START:
         traverse_state(state, &user_modes[SERVICE]);
-        uart0_puts("Transition to SERVICE\r\n");
         break;
         default:
         break;
