@@ -48,6 +48,6 @@ size: $(TARGET)
 
 clean:
 	$(RM) -r $(OBJ_DIR)/*
-	$(RM) $(BIN_DIR)/*
+	$(RM) -r $(BIN_DIR)/*
 
 .PHONY: all clean upload size

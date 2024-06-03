@@ -24,6 +24,7 @@ struct state_t {
 };
 
 struct state_machine_t {
+    uint8_t event;
     const state_t* state;
 };
 

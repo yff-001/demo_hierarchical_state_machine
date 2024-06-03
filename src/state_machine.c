@@ -31,7 +31,7 @@ enum operate_state_t {
     CHARGE
 };
 
-static enum result_t user_action(state_machine_t* const state, enum event_t event);
+static enum result_t user_action(state_machine_t* const state);
 static enum result_t user_entry(state_machine_t* const state);
 static enum result_t user_exit(state_machine_t* const state);
 static enum result_t service_action(state_machine_t* const state);
@@ -183,8 +183,8 @@ void state_machine_init(state_machine_t* const p_state_machines) {
     user_entry(p_state_machines);
 }
 
-static enum result_t user_action(state_machine_t* const state, enum event_t event) {
-    switch (event) {
+static enum result_t user_action(state_machine_t* const state) {
+    switch (state->event) {
         case E_COMM_START:
         traverse_state(state, &user_modes[SERVICE]);
         break;
