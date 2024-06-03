@@ -5,13 +5,13 @@
 #include "driver/gpio.h"
 #include "handler/xtimer.h"
 
-#define TAKE_ACTION(handler, triggered, state_machine)     \
+#define TAKE_ACTION(handler, triggered, state_machine)      \
 do {                                                        \
     if (handler != 0) {                                     \
-        enum result_t result = handler(state_machine);                    \
+        enum result_t result = handler(state_machine);      \
         switch (result) {                                   \
             case TRIGGER_TO_SELF:                           \
-                triggered = 1;                           \
+                triggered = 1;                              \
             case EVENT_HANDLED:                             \
                 break;                                      \
             default:                                        \
