@@ -3,21 +3,34 @@
 
 #include "driver/uart.h"
 
-enum event_t {Event_dummy};
+enum event_t {E_VOID};
 
 struct event_payload {
     char data;
     char* description;
 };
 
-struct stateMachine sm_device;
+/* hp: high power */
+struct stateMachine sm_hp;
 
-static void entryAction( void *stateData, struct event *event );
-static void exitAction( void *stateData, struct event *event );
-static void transAction( void *oldStateData, struct event *event, void *newStateData );
-static bool guard( void *condition, struct event *event );
+static void user_entry( void *stateData, struct event *event );
+static void user_exit( void *stateData, struct event *event );
+static void user_action( void *oldStateData, struct event *event, void *newStateData );
+static bool user_guard( void *condition, struct event *event );
+static void service_entry( void *stateData, struct event *event );
+static void service_exit( void *stateData, struct event *event );
+static void service_action( void *oldStateData, struct event *event, void *newStateData );
+static bool service_guard( void *condition, struct event *event );
+static void idle_entry( void *stateData, struct event *event );
+static void idle_exit( void *stateData, struct event *event );
+static void idle_action( void *oldStateData, struct event *event, void *newStateData );
+static bool idle_guard( void *condition, struct event *event );
+static void service_timeout_entry( void *stateData, struct event *event );
+static void service_timeout_exit( void *stateData, struct event *event );
+static void service_timeout_action( void *oldStateData, struct event *event, void *newStateData );
+static bool service_timeout_guard( void *condition, struct event *event );
 
-static struct state user, service, idle, run_motor, charge, error;
+static struct state user, service, idle, motor_run, charge, service_timeout, motor_test, save_config, error;
 
 /* EXPERIMENTAL */
 // enum state_t {
@@ -37,14 +50,14 @@ static struct state user, service, idle, run_motor, charge, error;
 //         .data = "user",
 //         .entryAction = &entryAction,
 //         .exitAction = &exitAction,
-//         .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &service},
+//         .transitions = (struct transition[]) {E_VOID, (void *)(intptr_t)'0', &guard, &action, &service},
 //         .numTransitions = 1,
 //         },
 //     [SERVICE] = {
 //         .data = "service",
 //         .entryAction = &entryAction,
 //         .exitAction = &exitAction,
-//         .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &user},
+//         .transitions = (struct transition[]) {E_VOID, (void *)(intptr_t)'0', &guard, &action, &user},
 //         .numTransitions = 1,
 //         }
 // };
@@ -52,43 +65,71 @@ static struct state user, service, idle, run_motor, charge, error;
 
 static struct state user =
 {
+    .entryState = &idle,
     .data = "user",
-    .entryAction = &entryAction,
-    .exitAction = &exitAction,
-    .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &service},
+    .entryAction = &user_entry,
+    .exitAction = &user_exit,
+    .transitions = (struct transition[]) {E_VOID, (void *)(intptr_t)'0', &user_guard, &user_action, &service},
     .numTransitions = 1,
 };
 
 static struct state service =
 {
+    .entryState = &service_timeout,
     .data = "service",
-    .entryAction = &entryAction,
-    .exitAction = &exitAction,
-    .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &user},
+    .entryAction = &service_entry,
+    .exitAction = &service_exit,
+    .transitions = (struct transition[]) {E_VOID, (void *)(intptr_t)'0', &service_guard, &service_action, &user},
     .numTransitions = 1,
+};
+
+static struct state idle =
+{
+    .entryState = NULL,
+    .data = "idle",
+    .entryAction = &idle_entry,
+    .exitAction = &idle_exit,
+    .transitions = (struct transition[]) {
+        {E_VOID, (void *)(intptr_t)'0', &idle_guard, &idle_action, &charge},
+        {E_VOID, (void *)(intptr_t)'0', &idle_guard, &idle_action, &motor_run}
+    },
+    .numTransitions = 2,
+};
+
+static struct state service_timeout =
+{
+    .entryState = NULL,
+    .data = "service timeout",
+    .entryAction = &service_timeout_entry,
+    .exitAction = &service_timeout_exit,
+    .transitions = (struct transition[]) {
+        {E_VOID, (void *)(intptr_t)'0', &service_timeout_guard, &service_timeout_action, &save_config},
+        {E_VOID, (void *)(intptr_t)'0', &service_timeout_guard, &service_timeout_action, &motor_test}
+    },
+    .numTransitions = 2,
 };
 
 static struct state error =
 {
-    .data = "Error",
-    .entryAction = &entryAction,
+    // .data = "Error",
+    // .entryAction = &entryAction,
 };
 
-static void entryAction(void *stateData, struct event *event)
+static void user_entry(void *stateData, struct event *event)
 {
     uart0_puts("entry: ");
     uart0_puts((const char*)stateData);
     uart0_puts("\r\n");
 }
 
-static void exitAction(void *stateData, struct event *event)
+static void user_exit(void *stateData, struct event *event)
 {
     uart0_puts("exit: ");
     uart0_puts((const char*)stateData);
     uart0_puts("\r\n");
 }
 
-static void transAction(void *oldStateData, struct event *event, void *newStateData)
+static void user_action(void *oldStateData, struct event *event, void *newStateData)
 {
     uart0_puts("action: ");
     uart0_puts((const char*)oldStateData);
@@ -97,7 +138,7 @@ static void transAction(void *oldStateData, struct event *event, void *newStateD
     uart0_puts("\r\n");
 }
 
-static bool guard(void *condition, struct event *event)
+static bool user_guard(void *condition, struct event *event)
 {
     /* cast the void pointer back to struct event_payload type */
     struct event_payload* event_data = (struct event_payload*)event->data;
@@ -110,14 +151,62 @@ static bool guard(void *condition, struct event *event)
     return (intptr_t)condition == (intptr_t)event_data->data;
 }
 
+static void service_entry( void *stateData, struct event *event ) {
+    //
+}
+
+static void service_exit( void *stateData, struct event *event ) {
+    //
+}
+
+static void service_action( void *oldStateData, struct event *event, void *newStateData ) {
+    //
+}
+
+static bool service_guard( void *condition, struct event *event ) {
+    //
+}
+
+static void idle_entry( void *stateData, struct event *event ) {
+    //
+}
+
+static void idle_exit( void *stateData, struct event *event ) {
+    //
+}
+
+static void idle_action( void *oldStateData, struct event *event, void *newStateData ) {
+    //
+}
+
+static bool idle_guard( void *condition, struct event *event ) {
+    //
+}
+
+static void service_timeout_entry( void *stateData, struct event *event ) {
+    //
+}
+
+static void service_timeout_exit( void *stateData, struct event *event ) {
+    //
+}
+
+static void service_timeout_action( void *oldStateData, struct event *event, void *newStateData ) {
+    //
+}
+
+static bool service_timeout_guard( void *condition, struct event *event ) {
+    //
+}
+
 void state_machine_init()
 {
-    stateM_init(&sm_device, &user, &error);
+    stateM_init(&sm_hp, &user, &error);
 }
 
 void state_machine_task()
 {
-    struct event event_one = {Event_dummy, &(struct event_payload){'0', "event one!"}};
+    struct event event_one = {E_VOID, &(struct event_payload){'0', "event one!"}};
 
-    int res = stateM_handleEvent(&sm_device, &event_one);
+    int res = stateM_handleEvent(&sm_hp, &event_one);
 }

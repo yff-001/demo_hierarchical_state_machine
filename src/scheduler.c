@@ -76,8 +76,8 @@ void scheduler_high_power() {
         }
 
         if (event_queue_available()) {
-            enum event_t event;
-            event_queue_get(&event);
+            // enum event_t event;
+            // event_queue_get(&event);
             state_machine_task();
         }
     }
