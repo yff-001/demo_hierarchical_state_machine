@@ -7,7 +7,7 @@ enum event_t {Event_dummy};
 
 struct event_payload {
     char data;
-    char* description; 
+    char* description;
 };
 
 struct stateMachine sm_device;
@@ -18,6 +18,37 @@ static void transAction( void *oldStateData, struct event *event, void *newState
 static bool guard( void *condition, struct event *event );
 
 static struct state user, service, idle, run_motor, charge, error;
+
+/* EXPERIMENTAL */
+// enum state_t {
+//     USER,
+//     SERVICE,
+//     IDLE,
+//     MOTOR_ON,
+//     CHARGE,
+//     SERVICE_TIMEOUT,
+//     MOTOR_TEST,
+//     AUTO_SHELF,
+//     SYSTEM_RESET
+// };
+
+// static struct state all_states[] = {
+//     [USER] = {
+//         .data = "user",
+//         .entryAction = &entryAction,
+//         .exitAction = &exitAction,
+//         .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &service},
+//         .numTransitions = 1,
+//         },
+//     [SERVICE] = {
+//         .data = "service",
+//         .entryAction = &entryAction,
+//         .exitAction = &exitAction,
+//         .transitions = (struct transition[]) {Event_dummy, (void *)(intptr_t)'0', &guard, &transAction, &user},
+//         .numTransitions = 1,
+//         }
+// };
+/* EXPERIMENTAL */
 
 static struct state user =
 {
@@ -70,9 +101,8 @@ static bool guard(void *condition, struct event *event)
 {
     /* cast the void pointer back to struct event_payload type */
     struct event_payload* event_data = (struct event_payload*)event->data;
-    /* access the string literal with arrow operator */
-    // uart0_puts(event_data->description);
 
+    /* access the string literal with arrow operator */
     uart0_puts("guard: ");
     uart0_puts(event_data->description);
     uart0_puts("\r\n");
