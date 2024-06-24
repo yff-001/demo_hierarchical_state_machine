@@ -6,7 +6,7 @@
 enum result_t {
     EVENT_HANDLED,
     EVENT_NOT_HANDLED,
-    // TRIGGER_TO_SELF             // not considered for now
+    TRIGGER_TO_SELF             // not considered for now
 };
 
 typedef struct state_t state_t;
