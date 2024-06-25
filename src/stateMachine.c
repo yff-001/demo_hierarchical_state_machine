@@ -37,6 +37,7 @@ void stateM_init( struct stateMachine *fsm,
    fsm->previousState = NULL;
    fsm->errorState = errorState;
 
+   /* this part is new */
    struct state* current_state = fsm->currentState;
 
    while (current_state->entryState) {
