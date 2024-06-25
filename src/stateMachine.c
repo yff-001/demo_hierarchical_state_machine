@@ -40,7 +40,7 @@ void stateM_init( struct stateMachine *fsm,
    /* this part is new */
    struct state* current_state = fsm->currentState;
 
-   while (current_state->entryState) {
+   while (current_state != NULL) {
       current_state->entryAction(NULL, NULL);
       current_state = current_state->entryState;
    }
