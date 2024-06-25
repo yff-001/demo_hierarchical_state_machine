@@ -202,11 +202,17 @@ static bool service_timeout_guard( void *condition, struct event *event ) {
 void state_machine_init()
 {
     stateM_init(&sm_hp, &user, &error);
+
+    /* events are dispatched here instead */
+
+    struct event event_one = {E_VOID, &(struct event_payload){'0', "event one!"}};
+
+    int res = stateM_handleEvent(&sm_hp, &event_one);
 }
 
 void state_machine_task()
 {
-    struct event event_one = {E_VOID, &(struct event_payload){'0', "event one!"}};
+    // struct event event_one = {E_VOID, &(struct event_payload){'0', "event one!"}};
 
-    int res = stateM_handleEvent(&sm_hp, &event_one);
+    // int res = stateM_handleEvent(&sm_hp, &event_one);
 }
