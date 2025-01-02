@@ -43,7 +43,7 @@ void scheduler_init() {
     display_init();
     xtimer_init();
 
-    xtimer_create(XTIMER_PERM, E_LED_ON, 1);
+    // xtimer_create(XTIMER_PERM, E_LED_ON, 1);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
 }
@@ -59,15 +59,15 @@ void scheduler_high_power() {
         if (has_permtick_elapsed() == 1) {
             timer_permtick_count();
 
-            // display_task();
+            communication_task();
             xtimer_task(XTIMER_PERM);
         }
 
         if (has_systick_elapsed() == 1) {
             timer_systick_count();
 
-            communication_task();
-            // display_task();
+            // communication_task();
+            display_task();
             xtimer_task(XTIMER_SYS);
         }
 

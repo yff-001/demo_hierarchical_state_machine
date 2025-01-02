@@ -13,7 +13,7 @@ static uint32_t permtick_count_accumulated;
 /* systick runs at 100 Hz, implemented with Timer 0 */
 void init_systick() {
     TCCR0A |= (1 << WGM01);                     // CTC mode, OCRA0 as TOP
-    TCCR0A |= (1 << CS00);
+    TCCR0B |= (1 << CS00);
     TCCR0B |= (1 << CS02);
     TIMSK0 |= (1 << OCIE0A);
     OCR0A = 155;                                // 100.16 Hz

@@ -76,9 +76,10 @@ void communication_init() {
 }
 
 void communication_task() {
-    while (signal_is_available()) {                         // make sure all signals are handled
-        comm_fsm();
-    }
+    // while (signal_is_available()) {                         // make sure all signals are handled
+    //     comm_fsm();
+    // }
+    uart0_puts("hello world!\r\n");
 }
 
 static void comm_fsm() {
