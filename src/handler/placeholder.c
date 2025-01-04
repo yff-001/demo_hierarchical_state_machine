@@ -1,12 +1,12 @@
 // #include "communication.h"
 
-// #include "driver/gpio.h"
-// #include "driver/timer.h"
-// #include "driver/uart.h"
+// #include "../driver/gpio.h"
+// #include "../driver/timers.h"
+// #include "../driver/uart.h"
 
-// #include "handler/communication.h"
-// #include "handler/xtimer.h"
-// #include "xtimer.h"
+// #include "../handler/communication.h"
+// #include "../handler/xtimer.h"
+// #include "../handler/xtimer.h"
 
 // #include <stdint.h>
 

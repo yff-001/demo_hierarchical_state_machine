@@ -11,7 +11,8 @@ enum serial_status_t {
     SERIAL_CALLBACK_ERROR
 };
 
-void uart0_init(uint8_t (*callback)(uint8_t));
+void uart0_init();
+void uart0_register_callback(uint8_t (*callback)(uint8_t));
 void uart0_transmit(uint8_t data);
 void uart0_puts(const char* message);
 

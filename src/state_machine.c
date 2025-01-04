@@ -33,7 +33,7 @@ void dispatch_event() {
     switch (current_machine_state) {
         case S1:
         if (event == E_LED_ON) {
-            gpio_toggle_led();
+            // gpio_toggle_led();
             // current_machine_state = S2;
             xtimer_create(XTIMER_PERM, E_LED_ON, 1);
         }

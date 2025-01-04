@@ -4,12 +4,14 @@
 #include "event_queue.h"
 #include "state_machine.h"
 
+#include "driver/adc.h"
 #include "driver/gpio.h"
 #include "driver/timers.h"
 #include "driver/uart.h"
 
 #include "handler/communication.h"
 #include "handler/display.h"
+#include "handler/measure.h"
 #include "handler/xtimer.h"
 
 #include <avr/interrupt.h>
@@ -34,6 +36,7 @@ enum operate_mode_t get_operate_mode() {
 void scheduler_init() {
     /* these should really be initialized in handlers */
     gpio_start();
+    adc_init();
 
     init_systick();
     init_permtick();
@@ -41,6 +44,7 @@ void scheduler_init() {
     /* handlers should be initialized here */
     communication_init();
     display_init();
+    measure_init();
     xtimer_init();
 
     // xtimer_create(XTIMER_PERM, E_LED_ON, 1);

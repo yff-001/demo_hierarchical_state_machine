@@ -17,6 +17,10 @@ void uart0_init(uint8_t (*callback)(uint8_t)) {
     UCSR0B |= (1 << RXCIE0);                        // enable RX Complete Interrupt
 }
 
+void uart0_register_callback(uint8_t (*callback)(uint8_t)) {
+    write_to_buffer = callback;
+}
+
 void uart0_transmit(uint8_t data) {
     while (!(UCSR0A & (1<<UDRE0)));                 // wait for empty transmit buffer
     UDR0 = data;                                    // put data into buffer
@@ -29,6 +33,6 @@ void uart0_puts(const char* message) {
 }
 
 ISR(USART_RX_vect) {
-    uint8_t u = UDR0;
-    write_to_buffer(u);
+    uint8_t data = UDR0;
+    write_to_buffer(data);
 }

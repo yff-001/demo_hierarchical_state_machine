@@ -1,8 +1,12 @@
 #ifndef ADC_H
 #define ADC_H
 
-void init_adc();
-void start_adc();
-void stop_adc();
+#include <stdint.h>
+
+void adc_init();
+void adc_disable();
+void adc_register_callback(void (*callback)(uint16_t));
+void adc_start();
+void adc_stop();
 
 #endif
