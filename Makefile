@@ -4,7 +4,8 @@ CFLAGS = \
 	-mmcu=$(MCU) \
 	-DF_CPU=16000000UL \
 	-Werror \
-	-Os
+	-Os \
+	-MMD -MP
 # LDFLAGS = -Wl,--gc-sections \
 
 # AVRDUDE settings
@@ -23,6 +24,7 @@ BIN_DIR = bin
 # Source files
 SRC = $(shell find $(SRC_DIR) -name *.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+DEP = $(OBJ:.o=.d)
 
 # Executable
 TARGET = $(BIN_DIR)/app.elf
@@ -49,5 +51,7 @@ size: $(TARGET)
 clean:
 	$(RM) -r $(OBJ_DIR)/*
 	$(RM) $(BIN_DIR)/*
+
+-include $(DEP)
 
 .PHONY: all clean upload size
