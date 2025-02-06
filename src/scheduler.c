@@ -9,6 +9,8 @@
 #include "driver/timers.h"
 #include "driver/uart.h"
 
+#include "device/ssd1312.h"
+
 #include "handler/communication.h"
 #include "handler/display.h"
 #include "handler/measure.h"

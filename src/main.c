@@ -1,4 +1,3 @@
-#include "device.h"
 // #include "events.h"
 // #include "event_queue.h"
 #include "scheduler.h"
