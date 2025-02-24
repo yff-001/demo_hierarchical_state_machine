@@ -14,12 +14,12 @@ void adc_init() {
         1       1       internal voltage reference
     */
     ADMUX |= (1 << REFS0);
-    ADMUX |= (1 << REFS1);
+    // ADMUX |= (1 << REFS1);
 
     // ADMUX |= (1 << ADLAR);              // left aligned
 
     /* channel selection */
-    ADMUX |= (1 << MUX3);
+    // ADMUX |= (1 << MUX3);
     // ADMUX |= (1 << MUX2);
     // ADMUX |= (1 << MUX1);
     // ADMUX |= (1 << MUX0);
