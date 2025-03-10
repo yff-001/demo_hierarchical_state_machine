@@ -21,7 +21,6 @@ void display_init() {
 
 void display_task() {
     //
-    gpio_toggle_led();
     // switch (current_state) {
     //     case LED_OFF:
     //     /* entry */

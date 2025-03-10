@@ -1,6 +1,7 @@
 #include "state_machine.h"
 #include "events.h"
 #include "event_queue.h"
+#include "scheduler.h"
 
 #include "driver/gpio.h"
 #include "handler/xtimer.h"
@@ -61,7 +62,8 @@ enum result_t dispatch_event(state_machine_t* const p_state_machines) {
 
         switch (result) {
             case EVENT_HANDLED:
-                gpio_toggle_led();
+                // gpio_toggle_led();
+                // set_power_mode(LOW_POWER);
                 break;
 
             case EVENT_NOT_HANDLED:

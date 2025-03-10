@@ -1,6 +1,9 @@
 #include "communication.h"
 #include "../driver/uart.h"
 
+#include <avr/boot.h>
+#include <stdio.h>
+
 #define Q_SIZE          8
 #define RX_BUFFER_SIZE  255
 
@@ -73,7 +76,17 @@ static uint8_t signal_is_available();
 
 void communication_init() {
     uart0_init(&rx_put);
-    uart0_puts("hello world!\r\n");
+    // uart0_puts("hello world!\r\n");
+
+    char fuse[16] = {0};
+    sprintf(fuse, "ext.: %X\r\n", boot_lock_fuse_bits_get(GET_EXTENDED_FUSE_BITS));
+    uart0_puts(fuse);
+
+    sprintf(fuse, "high: %X\r\n", boot_lock_fuse_bits_get(GET_HIGH_FUSE_BITS));
+    uart0_puts(fuse);
+
+    sprintf(fuse, "low: %X\r\n", boot_lock_fuse_bits_get(GET_LOW_FUSE_BITS));
+    uart0_puts(fuse);
 }
 
 void communication_task() {

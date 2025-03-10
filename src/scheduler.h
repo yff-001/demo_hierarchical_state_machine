@@ -22,6 +22,8 @@ enum power_mode_t get_power_mode();
 // enum use_mode_t get_use_mode();
 // enum operate_mode_t get_operate_mode();
 
+void set_power_mode(enum power_mode_t mode);
+
 void scheduler_init();
 void scheduler_high_power();
 void scheduler_low_power();

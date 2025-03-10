@@ -6,10 +6,12 @@
 #include "state_machine.h"
 
 #include "driver/gpio.h"
+#include "driver/pwm.h"
 #include "driver/timers.h"
 #include "driver/uart.h"
 
 #include "handler/communication.h"
+#include "handler/dac.h"
 #include "handler/display.h"
 #include "handler/xtimer.h"
 
@@ -22,11 +24,14 @@ enum power_mode_t get_power_mode() {
     return current_power_mode;
 }
 
+int count = 0;
+
 state_machine_t machine;
 
 void scheduler_init() {
     /* these should really be initialized in handlers */
     gpio_start();
+    pwm_init();
 
     init_systick();
     init_permtick();
@@ -38,7 +43,7 @@ void scheduler_init() {
 
     state_machine_init(&machine);
 
-    xtimer_create(XTIMER_PERM, E_LED_ON, 2);
+    xtimer_create(XTIMER_PERM, E_LED_ON, 10);
 
     set_sleep_mode(SLEEP_MODE_IDLE);
 }
@@ -54,14 +59,21 @@ void scheduler_high_power() {
         if (has_permtick_elapsed() == 1) {
             timer_permtick_count();
 
-            // display_task();
+            if (count++ > 3) {
+                dac_set_voltage();
+                count = 0;
+                gpio_toggle_led();
+            }
+            
+            // gpio_toggle_led();
             xtimer_task(XTIMER_PERM);
         }
 
         if (has_systick_elapsed() == 1) {
             timer_systick_count();
 
-            communication_task();
+            // gpio_toggle_led();
+            // communication_task();
             // display_task();
             xtimer_task(XTIMER_SYS);
         }
@@ -75,9 +87,14 @@ void scheduler_high_power() {
 }
 
 void scheduler_low_power() {
-    //
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_mode();
 }
 
 void shceduler_power_down() {
     //
+}
+
+void set_power_mode(enum power_mode_t mode) {
+    current_power_mode = LOW_POWER;
 }
