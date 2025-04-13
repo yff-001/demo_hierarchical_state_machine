@@ -65,7 +65,7 @@ void scheduler_high_power() {
         if (has_permtick_elapsed() == 1) {
             timer_permtick_count();
 
-            // communication_task();
+            communication_task();
             xtimer_task(XTIMER_PERM);
         }
 

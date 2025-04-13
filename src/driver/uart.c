@@ -3,7 +3,7 @@
 
 #include "uart.h"
 
-#define BAUD_0      250000
+#define BAUD_0      500000
 #define UBRR_0      ((F_CPU)/(BAUD_0*8UL)-1)        // see spec sheet: buad rate generator
 
 uint8_t (*write_to_buffer)(uint8_t);

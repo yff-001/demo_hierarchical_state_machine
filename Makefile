@@ -6,38 +6,38 @@ CFLAGS = \
 	-Werror \
 	-Os \
 	-MMD -MP
-# LDFLAGS = -Wl,--gc-sections \
+
+LDFLAGS = -Wl,--gc-sections
 
 # AVRDUDE settings
-BAUDRATE = 115200
-PROGRAMMER = arduino
-MCU = atmega328p
-PORT = /dev/ttyUSB0
+BAUDRATE ?= 115200
+PROGRAMMER ?= arduino
+MCU ?= atmega328p
+PORT ?= /dev/ttyUSB0
 RM = rm
 
 # Directories
 SRC_DIR = src
 LIB_DIR = lib
-OBJ_DIR = obj
-BIN_DIR = bin
+BUILD_DIR = build
 
 # Source files
-SRC = $(shell find $(SRC_DIR) -name *.c)
-OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
+SRC = $(shell find $(SRC_DIR) $(LIB_DIR) -name *.c)
+OBJ = $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC))
 DEP = $(OBJ:.o=.d)
 
 # Executable
-TARGET = $(BIN_DIR)/app.elf
-HEX = $(BIN_DIR)/app.hex
+TARGET = $(BUILD_DIR)/app.elf
+HEX = $(BUILD_DIR)/app.hex
 
 all: $(TARGET) $(HEX)
 
-$(TARGET): $(OBJ) $(LIBOBJ)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(HEX): $(TARGET)
 	avr-objcopy -O ihex -R .eeprom $(TARGET) $(HEX)
@@ -49,8 +49,7 @@ size: $(TARGET)
 	avr-size --mcu=$(MCU) --format=avr $(TARGET)
 
 clean:
-	$(RM) -r $(OBJ_DIR)/*
-	$(RM) $(BIN_DIR)/*
+	$(RM) -rf $(BUILD_DIR)
 
 -include $(DEP)
 
