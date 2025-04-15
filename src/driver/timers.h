@@ -9,4 +9,6 @@ void timer_permtick_count();
 int has_systick_elapsed();
 int has_permtick_elapsed();
 
+uint32_t timer_get_systick_accumulated(void);
+
 #endif

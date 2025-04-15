@@ -1,5 +1,7 @@
 #include "scheduler.h"
 
+#include "log.h"
+
 #include "events.h"
 #include "event_queue.h"
 #include "state_machine.h"
@@ -67,6 +69,8 @@ void scheduler_high_power() {
 
             communication_task();
             xtimer_task(XTIMER_PERM);
+
+            LOG_INFO("perm tick\n");
         }
 
         if (has_systick_elapsed() == 1) {

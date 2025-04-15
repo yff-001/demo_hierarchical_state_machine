@@ -1,9 +1,12 @@
 // #include "events.h"
 // #include "event_queue.h"
 #include "scheduler.h"
+#include "log.h"
 
 int main() {
     scheduler_init();
+
+    LOG_INFO("scheduler ready\n");
 
     for (;;) {
         switch (get_power_mode()) {

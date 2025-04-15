@@ -1,12 +1,18 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
+#include <stdio.h>
+
 #include "uart.h"
 
 #define BAUD_0      500000
 #define UBRR_0      ((F_CPU)/(BAUD_0*8UL)-1)        // see spec sheet: buad rate generator
 
 uint8_t (*write_to_buffer)(uint8_t);
+int uart_putchar(char c, FILE *stream);
+
+static FILE uart_stdout = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
+
 
 void uart0_init(uint8_t (*callback)(uint8_t)) {
     UBRR0L = (uint8_t)UBRR_0;                       // write lower byte
@@ -15,6 +21,8 @@ void uart0_init(uint8_t (*callback)(uint8_t)) {
     UCSR0A |= (1<<U2X0);                            // U2X0 bit seems to be 1 by default on Pro Mini 3.3V 8Mhz
     UCSR0B |= (1 << RXEN0) | (1 << TXEN0);          // enable transmitter & receiver
     UCSR0B |= (1 << RXCIE0);                        // enable RX Complete Interrupt
+
+    stdout = &uart_stdout;
 }
 
 void uart0_register_callback(uint8_t (*callback)(uint8_t)) {
@@ -35,4 +43,14 @@ void uart0_puts(const char* message) {
 ISR(USART_RX_vect) {
     uint8_t data = UDR0;
     write_to_buffer(data);
+}
+
+/** TODO: tx interrupt with circular buffer */
+
+int uart_putchar(char c, FILE *stream) {
+    if (c == '\n') {
+        uart0_transmit('\r'); // Convert LF to CRLF
+    }
+    uart0_transmit(c);
+    return 0;
 }
