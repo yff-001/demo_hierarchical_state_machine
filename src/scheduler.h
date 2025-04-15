@@ -7,25 +7,26 @@ enum power_mode_t {
     POWER_DOWN
 };
 
-enum use_mode_t {
-    USER,
-    SERVICE
-};
+// enum use_mode_t {
+//     USER,
+//     SERVICE
+// };
 
-enum operate_mode_t {
-    IDLE,
-    ACTIVE,
-    CHARGE
-};
+// enum operate_mode_t {
+//     IDLE,
+//     ACTIVE,
+//     CHARGE
+// };
 
 enum power_mode_t get_power_mode();
-enum use_mode_t get_use_mode();
-enum operate_mode_t get_operate_mode();
+// enum use_mode_t get_use_mode();
+// enum operate_mode_t get_operate_mode();
+
+void set_power_mode(enum power_mode_t mode);
 
 void scheduler_init();
 void scheduler_high_power();
 void scheduler_low_power();
 void shceduler_power_down();
-// void dispatch_event();
 
 #endif
