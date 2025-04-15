@@ -1,18 +1,24 @@
 #include "scheduler.h"
 
+#include "log.h"
+
 #include "events.h"
 #include "event_queue.h"
 
 #include "state_machine.h"
 
+#include "driver/adc.h"
 #include "driver/gpio.h"
 #include "driver/pwm.h"
 #include "driver/timers.h"
 #include "driver/uart.h"
 
+#include "device/ssd1312.h"
+
 #include "handler/communication.h"
 #include "handler/dac.h"
 #include "handler/display.h"
+#include "handler/measure.h"
 #include "handler/xtimer.h"
 
 #include <avr/interrupt.h>
@@ -39,6 +45,7 @@ void scheduler_init() {
     /* handlers should be initialized here */
     communication_init();
     display_init();
+    measure_init();
     xtimer_init();
 
     state_machine_init(&machine);
@@ -67,6 +74,8 @@ void scheduler_high_power() {
             
             // gpio_toggle_led();
             xtimer_task(XTIMER_PERM);
+
+            LOG_INFO("perm tick\n");
         }
 
         if (has_systick_elapsed() == 1) {

@@ -89,6 +89,10 @@ void timer_permtick_count() {
     }
 }
 
+uint32_t timer_get_systick_accumulated(void) {
+    return systick_count_accumulated;
+}
+
 ISR(TIMER2_COMPA_vect) {
     systick_count_temp++;
 }
