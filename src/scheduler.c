@@ -8,6 +8,7 @@
 #include "state_machine.h"
 
 #include "driver/adc.h"
+#include "driver/cpu.h"
 #include "driver/gpio.h"
 #include "driver/pwm.h"
 #include "driver/timers.h"
@@ -71,7 +72,7 @@ void scheduler_high_power() {
                 count = 0;
                 gpio_toggle_led();
             }
-            
+
             // gpio_toggle_led();
             xtimer_task(XTIMER_PERM);
 
@@ -80,6 +81,7 @@ void scheduler_high_power() {
 
         if (has_systick_elapsed() == 1) {
             timer_systick_count();
+            cpu_watchdog_timer_reset();
 
             // gpio_toggle_led();
             // communication_task();
@@ -92,6 +94,7 @@ void scheduler_high_power() {
         }
     }
 
+    cpu_watchdog_timer_reset();
     cli();                                                                      // disable global interrupts
 }
 
