@@ -1,4 +1,3 @@
-// #include "device.h"
 #include "scheduler.h"
 
 int main() {

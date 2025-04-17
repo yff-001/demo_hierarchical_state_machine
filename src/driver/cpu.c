@@ -5,19 +5,19 @@
 
 void cpu_software_reset(void)
 {
-  cli();
+    cli();
 
-  wdt_reset();
+    wdt_reset();
 
-  MCUSR &= ~(1 << WDRF);
-  WDTCSR |= (1 << WDCE) | (1 << WDE);
-  WDTCSR = 0x00;
+    MCUSR &= ~(1 << WDRF);
+    WDTCSR |= (1 << WDCE) | (1 << WDE);
+    WDTCSR = 0x00;
 
-  wdt_enable(WDTO_15MS);
+    wdt_enable(WDTO_15MS);
 
-  for (;;);
+    for (;;);
 }
 
 void cpu_watchdog_timer_reset(void) {
-  //
+    //
 }
